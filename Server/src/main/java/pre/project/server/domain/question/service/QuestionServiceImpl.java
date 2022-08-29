@@ -6,6 +6,7 @@ import pre.project.server.domain.question.entity.Question;
 import pre.project.server.dto.QuestionPatchDto;
 import pre.project.server.dto.RequestDto;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,7 +30,7 @@ public class QuestionServiceImpl implements QuestionService {
      * 조회
      */
     public Question read(Long id){
-        Question question = questionRepository.findById(id).get();
+        Question question = findQuestion(id);
         return question;
     }
 
@@ -45,9 +46,13 @@ public class QuestionServiceImpl implements QuestionService {
      * 수정
      */
     public Question update(QuestionPatchDto patchDto) {
-        Question question = questionRepository.findById(patchDto.getQuestionId()).get();
-        question.setTitle(patchDto.getTitle());
-        question.setContent(patchDto.getContent());
+        Question question = findQuestion(patchDto.getQuestionId());
+
+        Optional.ofNullable(patchDto.getTitle())
+                        .ifPresent(title -> question.setTitle(title));
+        Optional.ofNullable(patchDto.getContent())
+                        .ifPresent(content -> question.setContent(content));
+        question.setEditDate(LocalDateTime.now());
 
         return questionRepository.save(question);
     }
@@ -56,7 +61,13 @@ public class QuestionServiceImpl implements QuestionService {
      * 삭제
      */
     public void delete(Long id){
-        Question question = questionRepository.findById(id).get();
+        Question question = findQuestion(id);
         questionRepository.delete(question);
+    }
+
+    public Question findQuestion(Long questionId) {
+        Optional<Question> optionalQuestion = questionRepository.findById(questionId);
+        Question findQuestion = optionalQuestion.orElseThrow(() -> new NullPointerException());
+        return findQuestion;
     }
 }
