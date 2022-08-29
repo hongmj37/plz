@@ -1,9 +1,10 @@
-package pre.project.server.answer.entity;
+package pre.project.server.domain.answer;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import pre.project.server.domain.question.entity.Question;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -17,18 +18,23 @@ import java.util.Date;
 public class Answer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int answerId;
+    private Long answerId;
 
     @Column(nullable = false)
-    private String contents;
+    private String content;
 
     @Column(nullable=false, updatable = false)
-    private LocalDateTime regDate;
+    private LocalDateTime regDate=LocalDateTime.now();
 
-    private Date editDate;
+    private LocalDateTime editDate=LocalDateTime.now();
 
     private int recommendNum;
 
-    @Column(nullable = false)
-    private int questionId;
+    @ManyToOne
+    @JoinColumn(name = "questionId")
+    private Question question;
+
+    public void addQuestion(Question question){
+        this.question = question;
+    }
 }
