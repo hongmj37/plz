@@ -1,13 +1,13 @@
 package pre.project.server.domain.question.service;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import pre.project.server.domain.question.repository.QuestionRepository;
 import pre.project.server.domain.question.entity.Question;
+import pre.project.server.domain.question.repository.QuestionRepository;
 import pre.project.server.dto.QuestionPatchDto;
 import pre.project.server.dto.RequestDto;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
