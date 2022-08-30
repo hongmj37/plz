@@ -2,6 +2,7 @@ package pre.project.server.domain.question.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import pre.project.server.domain.question.service.QuestionService;
 import pre.project.server.domain.question.service.QuestionServiceImpl;
 import pre.project.server.domain.question.entity.Question;
+import pre.project.server.dto.MultiResponseDto;
 import pre.project.server.dto.QuestionPatchDto;
 import pre.project.server.dto.RequestDto;
 import pre.project.server.dto.QuestionResponseDto;
@@ -26,10 +28,14 @@ public class QuestionController {
      * 전체 게시글 조회
      */
     @GetMapping
-    public ResponseEntity readQuestions() {
-        List<Question> questionResult = questionService.readAll();
-        return new ResponseEntity<>(questionResult, HttpStatus.OK);
+    public ResponseEntity readQuestions(@Positive @RequestParam int page,
+                                        @Positive @RequestParam int size) {
+        Page<Question> pageQuestions = questionService.readAll(page - 1 ,size);
+        List<Question> question = pageQuestions.getContent();
+        return ResponseEntity.ok(
+                new MultiResponseDto(question,pageQuestions));
     }
+
 
     /**
      * 게시글 하나 조회
