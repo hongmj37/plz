@@ -1,9 +1,8 @@
-package pre.project.server.domain.answer;
+package pre.project.server.domain.answer.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import pre.project.server.domain.question.entity.Question;
 
 import javax.persistence.*;
@@ -15,17 +14,24 @@ import java.util.Date;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
+@Table(name = "answer")
 public class Answer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long answerId;
 
     @Column(nullable = false)
-    private String content;
+    private String content; // 댓글 내용
 
-    @Column(nullable=false, updatable = false)
+    @Column(name= "reg_date", nullable=false, updatable = false)
+    @CreatedDate
+    //private String regDate;
     private LocalDateTime regDate=LocalDateTime.now();
 
+    @Column(name= "edit_date")
+    @LastModifiedDate
+    //private String editDate;
     private LocalDateTime editDate=LocalDateTime.now();
 
     private int recommendNum;

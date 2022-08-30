@@ -4,8 +4,7 @@ import lombok.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
-import pre.project.server.domain.answer.Answer;
+import pre.project.server.domain.answer.entity.Answer;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -38,7 +37,7 @@ public class Question {
 
     private int recommendNum = 0;
 
-    @OneToMany(mappedBy = "question")
+    @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
     List<Answer> answers = new ArrayList<>();
 
     public void addAnswers(Answer answer){
