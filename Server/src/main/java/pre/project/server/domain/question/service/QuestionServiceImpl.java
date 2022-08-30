@@ -1,6 +1,9 @@
 package pre.project.server.domain.question.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import pre.project.server.domain.question.entity.Question;
 import pre.project.server.domain.question.repository.QuestionRepository;
@@ -9,6 +12,7 @@ import pre.project.server.dto.RequestDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -37,11 +41,12 @@ public class QuestionServiceImpl implements QuestionService {
     /**
      * 전체 조회
      */
-    public List<Question> readAll(){
-        List<Question> question = questionRepository.findAll();
-        return question;
-    }
 
+    @Override
+    public Page<Question> readAll(int page, int size){
+        return questionRepository.findAll(PageRequest.of(page,size,
+                Sort.by("question").descending()));
+    }
     /**
      * 수정
      */
