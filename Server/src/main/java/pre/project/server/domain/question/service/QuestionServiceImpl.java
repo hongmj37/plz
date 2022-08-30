@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pre.project.server.domain.question.entity.Question;
 import pre.project.server.domain.question.repository.QuestionRepository;
 import pre.project.server.dto.QuestionPatchDto;
@@ -19,9 +20,6 @@ import java.util.Optional;
 public class QuestionServiceImpl implements QuestionService {
     private final QuestionRepository questionRepository;
 
-    /**
-     * 작성
-     */
     public Question create(RequestDto requestDto) {
         Question question = new Question();
         question.setTitle(requestDto.getTitle());
@@ -30,26 +28,17 @@ public class QuestionServiceImpl implements QuestionService {
         return questionRepository.save(question);
     }
 
-    /**
-     * 조회
-     */
-    public Question read(Long id){
-        Question question = findQuestion(id);
+    public Question read(Long questionId){
+        Question question = findQuestion(questionId);
         return question;
     }
 
-    /**
-     * 전체 조회
-     */
 
-    @Override
     public Page<Question> readAll(int page, int size){
         return questionRepository.findAll(PageRequest.of(page,size,
-                Sort.by("question").descending()));
+                Sort.by("questionId").descending()));
     }
-    /**
-     * 수정
-     */
+ 
     public Question update(QuestionPatchDto patchDto) {
         Question question = findQuestion(patchDto.getQuestionId());
 
@@ -62,14 +51,12 @@ public class QuestionServiceImpl implements QuestionService {
         return questionRepository.save(question);
     }
 
-    /**
-     * 삭제
-     */
-    public void delete(Long id){
-        Question question = findQuestion(id);
+    public void delete(Long questionId){
+        Question question = findQuestion(questionId);
         questionRepository.delete(question);
     }
 
+    @Transactional(readOnly = true)
     public Question findQuestion(Long questionId) {
         Optional<Question> optionalQuestion = questionRepository.findById(questionId);
         Question findQuestion = optionalQuestion.orElseThrow(() -> new NullPointerException());
